@@ -24,6 +24,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -59,11 +60,16 @@ import com.thefinestartist.utils.service.ClipboardManagerUtil;
 import com.thefinestartist.utils.ui.DisplayUtil;
 import com.thefinestartist.utils.ui.ViewUtil;
 
+import com.google.common.net.HostAndPort;
+
 
 /**
  * Created by Leonardo on 11/14/15.
  */
 public class FinestWebViewActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
+
+    private static final String TAG = "FinestWebViewActivity";
+
 
     protected int key;
 
@@ -158,6 +164,7 @@ public class FinestWebViewActivity extends AppCompatActivity implements AppBarLa
     protected WebSettings.LayoutAlgorithm webViewLayoutAlgorithm;
     protected String webViewStandardFontFamily;
     protected String webViewFixedFontFamily;
+    protected String webViewProxyAddr;
     protected String webViewSansSerifFontFamily;
     protected String webViewSerifFontFamily;
     protected String webViewCursiveFontFamily;
@@ -322,6 +329,7 @@ public class FinestWebViewActivity extends AppCompatActivity implements AppBarLa
         webViewLayoutAlgorithm = builder.webViewLayoutAlgorithm;
         webViewStandardFontFamily = builder.webViewStandardFontFamily;
         webViewFixedFontFamily = builder.webViewFixedFontFamily;
+        webViewProxyAddr = builder.webViewProxyAddr;
         webViewSansSerifFontFamily = builder.webViewSansSerifFontFamily;
         webViewSerifFontFamily = builder.webViewSerifFontFamily;
         webViewCursiveFontFamily = builder.webViewCursiveFontFamily;
@@ -434,6 +442,17 @@ public class FinestWebViewActivity extends AppCompatActivity implements AppBarLa
 
         webLayout = (FrameLayout) findViewById(R.id.webLayout);
         webView = new WebView(this);
+
+        if (webViewProxyAddr != null && !webViewProxyAddr.equals("")) {
+            Log.d(TAG, "WebViewProxyAddr is " + webViewProxyAddr);
+            HostAndPort hp = HostAndPort.fromString(webViewProxyAddr);
+            String proxyHost = hp.getHostText();
+            int proxyPort = hp.getPort();
+            ProxySettings.setProxy(getApplicationContext(),
+                    webView, proxyHost, proxyPort);
+        }
+             
+
         webLayout.addView(webView);
     }
 
@@ -680,7 +699,7 @@ public class FinestWebViewActivity extends AppCompatActivity implements AppBarLa
 
             if (data != null)
                 webView.loadData(data, mimeType, encoding);
-            else if (url != null)
+            else if (url != null) 
                 webView.loadUrl(url);
         }
 

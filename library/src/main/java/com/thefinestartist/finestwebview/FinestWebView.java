@@ -122,6 +122,7 @@ public class FinestWebView {
         protected Boolean webViewBuiltInZoomControls;
         protected Boolean webViewDisplayZoomControls;
         protected Boolean webViewAllowFileAccess;
+        protected String webViewProxyAddr;
         protected Boolean webViewAllowContentAccess;
         protected Boolean webViewLoadWithOverviewMode;
         protected Boolean webViewSaveFormData;
@@ -692,6 +693,11 @@ public class FinestWebView {
 
         public Builder webViewAllowFileAccess(boolean webViewAllowFileAccess) {
             this.webViewAllowFileAccess = webViewAllowFileAccess;
+            return this;
+        }
+
+        public Builder webViewLoadWithProxy(String webViewProxyAddr) {
+            this.webViewProxyAddr = webViewProxyAddr;
             return this;
         }
 
