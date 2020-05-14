@@ -1327,6 +1327,22 @@ public class FinestWebViewActivity extends AppCompatActivity
         startActivity(emailIntent);
 
         return true;
+      } else if (url.startsWith("tg:resolve")) {
+        // For telegram URLs, attempt to open in Telegram App directly, otherwise fall back to opening in browser
+        Intent intent = null;
+        try {
+          try {
+            view.getContext().getPackageManager().getPackageInfo("org.telegram.messenger", 0); //Check for Telegram Messenger App
+          } catch (Exception e) {
+            view.getContext().getPackageManager().getPackageInfo("org.thunderdog.challegram", 0); //Check for Telegram X App
+          }
+          intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        } catch (Exception e){ // App not found, open Telegram URL in WebView
+          view.loadUrl("http://www.telegram.me/" + url.split("domain=")[1]);
+          return false;
+        }
+        view.getContext().startActivity(intent);
+        return true;
       } else if (!url.startsWith("http")) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
