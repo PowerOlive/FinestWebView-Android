@@ -1308,12 +1308,6 @@ public class FinestWebViewActivity extends AppCompatActivity
         view.getContext().startActivity(intent);
         // If we return true, onPageStarted, onPageFinished won't be called.
         return true;
-      } else if (url.startsWith("tel:") || url.startsWith("sms:") || url.startsWith("smsto:") || url
-          .startsWith("mms:") || url.startsWith("mmsto:")) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        view.getContext().startActivity(intent);
-        return true; // If we return true, onPageStarted, onPageFinished won't be called.
       }
       /*******************************************************
        * Added in support for mailto:
@@ -1333,6 +1327,11 @@ public class FinestWebViewActivity extends AppCompatActivity
         startActivity(emailIntent);
 
         return true;
+      } else if (!url.startsWith("http")) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        view.getContext().startActivity(intent);
+        return true; // If we return true, onPageStarted, onPageFinished won't be called.
       } else {
         return super.shouldOverrideUrlLoading(view, url);
       }
