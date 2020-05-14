@@ -156,6 +156,7 @@ public class FinestWebView {
     protected Integer webViewCacheMode;
     protected Integer webViewMixedContentMode;
     protected Boolean webViewOffscreenPreRaster;
+    protected String webViewProxyAddr;
 
     protected String injectJavaScript;
 
@@ -888,11 +889,16 @@ public class FinestWebView {
           "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0");
     }
 
+    public Builder webViewLoadWithProxy(String webViewProxyAddr) {
+      this.webViewProxyAddr = webViewProxyAddr;
+      return this;
+    }
+
     public Builder injectJavaScript(String injectJavaScript) {
       this.injectJavaScript = injectJavaScript;
       return this;
     }
-
+    
     public void load(@StringRes int dataRes) {
       load(Res.getString(dataRes));
     }

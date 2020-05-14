@@ -23,6 +23,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -57,6 +58,8 @@ import com.thefinestartist.utils.service.ClipboardManagerUtil;
 import com.thefinestartist.utils.ui.DisplayUtil;
 import com.thefinestartist.utils.ui.ViewUtil;
 
+import com.google.common.net.HostAndPort;
+
 //MailTo Imports
 
 /**
@@ -64,6 +67,8 @@ import com.thefinestartist.utils.ui.ViewUtil;
  */
 public class FinestWebViewActivity extends AppCompatActivity
     implements AppBarLayout.OnOffsetChangedListener, View.OnClickListener {
+
+  private static final String TAG = "FinestWebViewActivity";
 
   protected int key;
 
@@ -185,6 +190,7 @@ public class FinestWebViewActivity extends AppCompatActivity
   protected Integer webViewCacheMode;
   protected Integer webViewMixedContentMode;
   protected Boolean webViewOffscreenPreRaster;
+  protected String webViewProxyAddr;
 
   protected String injectJavaScript;
 
@@ -426,6 +432,7 @@ public class FinestWebViewActivity extends AppCompatActivity
     webViewCacheMode = builder.webViewCacheMode;
     webViewMixedContentMode = builder.webViewMixedContentMode;
     webViewOffscreenPreRaster = builder.webViewOffscreenPreRaster;
+    webViewProxyAddr = builder.webViewProxyAddr;
 
     injectJavaScript = builder.injectJavaScript;
 
@@ -478,6 +485,14 @@ public class FinestWebViewActivity extends AppCompatActivity
 
     webLayout = (FrameLayout) findViewById(R.id.webLayout);
     webView = new WebView(this);
+    if (webViewProxyAddr != null && !webViewProxyAddr.equals("")) {
+        Log.d(TAG, "WebViewProxyAddr is " + webViewProxyAddr);
+        HostAndPort hp = HostAndPort.fromString(webViewProxyAddr);
+        String proxyHost = hp.getHost();
+        int proxyPort = hp.getPort();
+        ProxySettings.setProxy(getApplicationContext(),
+                webView, proxyHost, proxyPort);
+    }
     webLayout.addView(webView);
   }
 
